@@ -38,6 +38,11 @@ apiVersion: v1
 metadata:
   name: echoservice
   namespace: echoservice
+  labels:
+    app.kubernetes.io/component: echoservice
+    app.kubernetes.io/name: echoservice
+    app.kubernetes.io/part-of: echoservice
+    prometheus: k8s
 spec:
   ports:
     - protocol: TCP
@@ -71,3 +76,19 @@ spec:
                 name: echoservice
                 port:
                   number: 8080
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: echoservice-servicemonitor
+  namespace: echoservice
+spec:
+  endpoints:
+    - interval: 30s
+      port: web
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: echoservice
+      app.kubernetes.io/name: echoservice
+      app.kubernetes.io/part-of: echoservice
+      prometheus: k8s
