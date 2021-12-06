@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -18,7 +17,6 @@ func main() {
 	app.Get("/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / GET arguments: key=" + key)
-
 		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
 
 		if len(key) > 0 {
@@ -30,16 +28,8 @@ func main() {
 	app.Post("/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / POST arguments: key=" + key)
-
-		value := ""
-		if err := c.BodyParser(value); err != nil {
-			errString, _ := json.Marshal(err)
-			return c.Status(503).Send(errString)
-		}
-		m[key] = value
-
+		m[key] = string(c.Body())
 		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
-
 		return c.JSON(m)
 	})
 
