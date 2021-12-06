@@ -46,5 +46,16 @@ func main() {
 		return c.SendString(value)
 	})
 
+	app.Post("/:key?", func(c *fiber.Ctx) error {
+		key := c.Params("key")
+		value := ""
+		if err := c.BodyParser(value); err != nil {
+			errString, _ := json.Marshal(err)
+			return c.Status(503).Send(errString)
+		}
+		m[key] = value
+		return c.SendString(value)
+	})
+
 	app.Listen(":8080")
 }
