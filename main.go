@@ -26,9 +26,14 @@ func main() {
 	})
 
 	app.Get("/metrics", func(c *fiber.Ctx) error {
-		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /metrics/ GET")
+		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /metrics GET")
 
 		result := "echoservicestatus 1"
+
+		for key, element := range m {
+			result = result + "\nechoservicedata{key=" + key + "} " + element
+		}
+
 		return c.Send([]byte(result))
 	})
 
