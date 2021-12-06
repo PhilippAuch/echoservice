@@ -1,0 +1,73 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: echoservice
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: echoservice
+  namespace: echoservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echoservice
+  template:
+    metadata:
+      labels:
+        app: echoservice
+    spec:
+      containers:
+        - name: echoservice
+          image: ghcr.io/philipp-auch-de/echoservice:action-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: echoservice
+  namespace: echoservice
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: echoservice
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: echoservice
+  namespace: echoservice
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - echoservice.philipp-auch.de
+      secretName: echoservice-tls-secret
+  rules:
+    - host: echoservice.philipp-auch.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: echoservice
+                port:
+                  number: 8080
