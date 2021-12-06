@@ -14,7 +14,7 @@ func main() {
 	m["init"] = "init response"
 	m["second"] = "5"
 
-	app.Get("/:key?", func(c *fiber.Ctx) error {
+	app.Get("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / GET arguments: key=" + key)
 		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
@@ -25,14 +25,14 @@ func main() {
 		return c.JSON(m)
 	})
 
-	app.Get("/metrics/", func(c *fiber.Ctx) error {
+	app.Get("/metrics", func(c *fiber.Ctx) error {
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /metrics/ GET")
 
 		result := "echoservicestatus 1"
 		return c.Send([]byte(result))
 	})
 
-	app.Post("/:key?", func(c *fiber.Ctx) error {
+	app.Post("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / POST arguments: key=" + key)
 		m[key] = string(c.Body())
