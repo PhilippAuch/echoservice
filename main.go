@@ -25,6 +25,13 @@ func main() {
 		return c.JSON(m)
 	})
 
+	app.Get("/metrics/", func(c *fiber.Ctx) error {
+		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /metrics/ GET")
+
+		result := "echoservicestatus 1"
+		return c.Send([]byte(result))
+	})
+
 	app.Post("/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / POST arguments: key=" + key)
