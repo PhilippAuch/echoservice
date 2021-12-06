@@ -27,7 +27,7 @@ func main() {
 	})
 
 	app.Get("/:key?", func(c *fiber.Ctx) error {
-		key := c.Params("name")
+		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / GET arguments: key=" + key)
 
 		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
