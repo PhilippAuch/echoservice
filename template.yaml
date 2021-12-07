@@ -27,6 +27,13 @@ spec:
             - containerPort: 8080
               protocol: TCP
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 10m
+              memory: 10Mi
       restartPolicy: Always
   strategy:
     type: RollingUpdate
