@@ -1,9 +1,26 @@
-FROM golang:1.17
+##
+## Build
+##
+FROM golang:1.17.4-alpine3.15 AS builder
 
-WORKDIR /go/src/app
-COPY . .
+WORKDIR /app
 
-RUN go get -d -v ./...
-RUN go install -v ./...
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
 
-CMD ["app"]
+COPY *.go ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o goapp-compiled .
+
+##
+## Deploy
+##
+FROM gcr.io/distroless/base-debian10 AS runner
+
+WORKDIR /
+COPY --from=builder /app/goapp-compiled .
+
+EXPOSE 8080
+USER nonroot:nonroot
+ENTRYPOINT ["./goapp-compiled"]
