@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,9 +11,9 @@ import (
 func main() {
 	app := fiber.New()
 
-	m := make(map[string]string)
-	m["init"] = "init response"
-	m["second"] = "5"
+	m := make(map[string]float64)
+	m["init"] = 0.0
+	m["second"] = 42
 
 	app.Get("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
@@ -31,7 +32,7 @@ func main() {
 		result := "echoservicestatus 1"
 
 		for key, element := range m {
-			result = result + "\nechoservicedata{key=\"" + key + "\"} " + element
+			result = result + "\nechoservicedata{key=\"" + key + "\"} " + fmt.Sprintf("%f", element)
 		}
 
 		return c.Send([]byte(result))
@@ -40,7 +41,7 @@ func main() {
 	app.Post("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / POST arguments: key=" + key)
-		m[key] = string(c.Body())
+		m[key], _ = strconv.ParseFloat(string(c.Body()), 64)
 		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
 		return c.JSON(m)
 	})
