@@ -31,7 +31,7 @@ func main() {
 		result := "echoservicestatus 1"
 
 		for key, element := range m {
-			result = result + "\nechoservicedata{key=" + key + "} " + element
+			result = result + "\nechoservicedata{key=\"" + key + "\"} " + element
 		}
 
 		return c.Send([]byte(result))
