@@ -38,6 +38,16 @@ func main() {
 		return c.Send([]byte(result))
 	})
 
+	app.Get("/keys", func(c *fiber.Ctx) error {
+		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /keys GET")
+
+		for key, element := range m {
+			fmt.Println(key, []byte(key), element)
+		}
+
+		return c.SendString("returnString")
+	})
+
 	app.Post("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER / POST arguments: key=" + key)
