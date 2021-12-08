@@ -66,7 +66,7 @@ func main() {
 			fmt.Println(key, []byte(key), element)
 		}
 		fmt.Println(time.Now().Format(time.RFC3339), " EXIT / POST")
-		return c.JSON(m)
+		return c.SendString("Done")
 	})
 
 	app.Listen(":8080")
