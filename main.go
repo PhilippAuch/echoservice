@@ -9,7 +9,9 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		Immutable: true,
+	})
 
 	m := make(map[string]float64)
 	m["init"] = 0.0
@@ -18,14 +20,8 @@ func main() {
 	app.Get("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /data/ GET arguments: key=" + key)
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
-		fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
-		fmt.Println(time.Now().Format(time.RFC3339) + " EXIT /data/ GET")
+		// fmt.Println(time.Now().Format(time.RFC3339)+" map:", m)
+		// fmt.Println(time.Now().Format(time.RFC3339) + " EXIT /data/ GET")
 		if len(key) > 0 {
 			return c.JSON(m[key])
 		}
@@ -34,39 +30,23 @@ func main() {
 
 	app.Get("/metrics", func(c *fiber.Ctx) error {
 		fmt.Println(time.Now().Format(time.RFC3339) + " ENTER /metrics GET")
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
 
 		result := "echoservicestatus 1"
-
 		for key, element := range m {
 			result = result + "\nechoservicedata{key=\"" + key + "\"} " + fmt.Sprintf("%f", element)
 		}
 
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
-		fmt.Println(time.Now().Format(time.RFC3339) + " EXIT /metrics GET")
+		// fmt.Println(time.Now().Format(time.RFC3339) + " EXIT /metrics GET")
 		return c.SendString(result)
 	})
 
 	app.Post("/data/:key?", func(c *fiber.Ctx) error {
-		key := c.Params("key")
+		key := string(c.Params("key"))
 		fmt.Println(time.Now().Format(time.RFC3339), " ENTER / POST arguments: key=", key)
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
-		fmt.Println(time.Now().Format(time.RFC3339), " map:", m)
-		a, b := strconv.ParseFloat(string(c.Body()), 64)
-		fmt.Println(a, b)
-		m[key] = a
-		fmt.Println(time.Now().Format(time.RFC3339), " map:", m)
-		for key, element := range m {
-			fmt.Println(key, []byte(key), element)
-		}
-		fmt.Println(time.Now().Format(time.RFC3339), " EXIT / POST")
-		return c.SendString("Done")
+		m[key], _ = strconv.ParseFloat(string(c.Body()), 64)
+		// fmt.Println(time.Now().Format(time.RFC3339), " map:", m)
+		// fmt.Println(time.Now().Format(time.RFC3339), " EXIT / POST arguments: key=", key)
+		return c.JSON(m)
 	})
 
 	app.Listen(":8080")
