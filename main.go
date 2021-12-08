@@ -57,7 +57,10 @@ func main() {
 		for key, element := range m {
 			fmt.Println(key, []byte(key), element)
 		}
-		m[key], _ = strconv.ParseFloat(string(c.Body()), 64)
+		fmt.Println(time.Now().Format(time.RFC3339), " map:", m)
+		a, b := strconv.ParseFloat(string(c.Body()), 64)
+		fmt.Println(a, b)
+		m[key] = a
 		fmt.Println(time.Now().Format(time.RFC3339), " map:", m)
 		for key, element := range m {
 			fmt.Println(key, []byte(key), element)
