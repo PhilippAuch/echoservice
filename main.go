@@ -48,7 +48,7 @@ func main() {
 			fmt.Println(key, []byte(key), element)
 		}
 		fmt.Println(time.Now().Format(time.RFC3339) + " EXIT /metrics GET")
-		return c.Send([]byte(result))
+		return c.SendString(result)
 	})
 
 	app.Post("/data/:key?", func(c *fiber.Ctx) error {
