@@ -14,8 +14,6 @@ func main() {
 	})
 
 	m := make(map[string]float64)
-	m["init"] = 0.0
-	m["second"] = 42
 
 	app.Get("/data/:key?", func(c *fiber.Ctx) error {
 		key := c.Params("key")
