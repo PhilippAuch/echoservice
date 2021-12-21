@@ -94,6 +94,11 @@ metadata:
   name: echoservice-servicemonitor
   namespace: echoservice
 spec:
+  targetLabels:
+    - container
+    - endpoint
+    - instance
+    - namespace
   endpoints:
     - interval: 30s
       port: web
@@ -112,7 +117,7 @@ rules:
       - list
       - watch
     apiGroups:
-      - ''
+      - ""
     resources:
       - services
       - endpoints
