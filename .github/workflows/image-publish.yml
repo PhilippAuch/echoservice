@@ -1,8 +1,6 @@
 name: Image Publish
 
 on:
-  schedule:
-    - cron: '00 04 * * *'
   push:
     branches: [ main ]
   workflow_dispatch:
