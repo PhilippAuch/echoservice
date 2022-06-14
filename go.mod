@@ -2,7 +2,7 @@ module app
 
 go 1.17
 
-require github.com/gofiber/fiber/v2 v2.34.0
+require github.com/gofiber/fiber/v2 v2.34.1
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
