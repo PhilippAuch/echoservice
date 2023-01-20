@@ -7,9 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "gomod" # See documentation for possible values
     directory: "/" # Location of package manifests
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
       day: "friday"
-    allow:
-      - dependency-type: "all"    
