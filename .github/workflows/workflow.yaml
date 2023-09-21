@@ -1,4 +1,4 @@
-name: Image Publish
+name: Workflow
 
 on:
   push:
